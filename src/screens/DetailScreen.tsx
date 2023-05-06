@@ -16,7 +16,9 @@ export const DetailScreen = ({route}: Props) => {
   const uri = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 
   // console.log(movie.id)
-  useMovieDetails(movie.id);
+  const { isLoading, cast, movieFull} = useMovieDetails(movie.id);
+
+  console.log(isLoading)
 
   return (
     <ScrollView>
