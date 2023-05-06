@@ -1,23 +1,37 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import Carousel from 'react-native-snap-carousel';
-import ImageColors from 'react-native-image-colors'
 
 import {ActivityIndicator, Dimensions, View, ScrollView} from 'react-native';
 import {useMovies} from '../hooks/useMovies';
 import {MoviePoster} from '../components/MoviePoster';
 import {HorizontalSlider} from '../components/HorizontalSlider';
 import {GradientBackground} from '../components/GradientBackground';
-import { getImageColors } from '../helpers/getColores';
-import { GradientContext } from '../context/GradientContext';
+import {getImageColors} from '../helpers/getColores';
+import {GradientContext} from '../context/GradientContext';
 
 const {width: windowWidth} = Dimensions.get('window');
 
 export const HomeScreen = () => {
   const {nowPlaying, popular, upcoming, topRated, isLoading} = useMovies();
   const {top} = useSafeAreaInsets();
-  const {setMainColors} = useContext(GradientContext)
+  const {setMainColors} = useContext(GradientContext);
+
+  const getPosterColors = async (index: number) => {
+    const movie = nowPlaying[index];
+    const uri = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+
+    const [primary = 'green', secondary = 'orange'] = await getImageColors(uri);
+    setMainColors({primary, secondary});
+  };
+
+  // TODO: Despues de agregar estas líneas me ha dado error, ver con mas ganas despues
+  useEffect(() => {
+    if (nowPlaying.length > 0) {
+      getPosterColors(0);
+    }
+  }, [nowPlaying]);
 
   if (isLoading) {
     return (
@@ -26,14 +40,6 @@ export const HomeScreen = () => {
       </View>
     );
   }
-
-  const getPosterColors = async (index: number) => {
-    const movie = nowPlaying[index];
-    const uri = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-
-    const [primary = "green", secondary = "orange"]  = await getImageColors(uri)
-    setMainColors({ primary, secondary})
-  };
 
   return (
     <GradientBackground>
