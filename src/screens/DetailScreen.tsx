@@ -51,7 +51,7 @@ export const DetailScreen = ({route, navigation}: Props) => {
         <TouchableOpacity
           onPress={() => navigation.pop()}
         >
-          <Icon color="white" name="chevron-back-outline" size={30} />
+          <Icon color="white" name="chevron-back-outline" size={50} />
         </TouchableOpacity>
       </View>
     </ScrollView>
